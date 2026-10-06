@@ -17,3 +17,12 @@
   font-style: normal;
   font-display: block;
 }
+
+/* space-grotesk — Google Fonts ofl/spacegrotesk @ 7085eb89a950 · SANS_SERIF */
+@font-face {
+  font-family: 'Space Grotesk';   /* SIL OFL 1.1 · Copyright 2020 The Space Grotesk Project Authors (https://github.com/floriankarsten/space-grotesk) · fonts/space-grotesk/OFL.txt */
+  src: url('../fonts/space-grotesk/SpaceGrotesk[wght].ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: block;
+}

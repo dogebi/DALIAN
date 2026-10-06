@@ -1,0 +1,32 @@
+{
+  "time": {
+    "text": "时间",
+    "font": "noto-serif-sc",
+    "size": 200,
+    "weight": 700,
+    "tracking": 0,
+    "lineHeight": 1.15,
+    "align": "center",
+    "step": 3
+  },
+  "century": {
+    "text": "上个世纪",
+    "font": "noto-serif-sc",
+    "size": 200,
+    "weight": 700,
+    "tracking": 0,
+    "lineHeight": 1.15,
+    "align": "center",
+    "step": 3
+  },
+  "dalian": {
+    "text": "大连",
+    "font": "noto-serif-sc",
+    "size": 280,
+    "weight": 700,
+    "tracking": 0,
+    "lineHeight": 1.15,
+    "align": "center",
+    "step": 3
+  }
+}

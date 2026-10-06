@@ -26,6 +26,7 @@
         <div class="horizon"></div>
         <p class="hook-sub">中国 辽宁省 · 辽东半岛</p>
       </div>
+      <div class="glyph" id="g-time"></div>
     </section>
 
     <!-- s02 · 地图与不冻港 -->
@@ -36,9 +37,17 @@
         </svg>
       </div>
       <!-- the type stays put while the camera travels: it must stay readable at every moment -->
+      <div class="glyph" id="g-dalian"></div>
+      <svg class="compass" viewBox="-60 -60 120 120" width="120" height="120" aria-hidden="true">
+        <circle class="cp-ring" cx="0" cy="0" r="46" />
+        <circle class="cp-ring thin" cx="0" cy="0" r="34" />
+        <path class="cp-needle" d="M0 -40 L10 0 L0 40 L-10 0 Z" />
+        <path class="cp-line" d="M-52 0 L52 0 M0 -52 L0 52" />
+      </svg>
+      <div class="radar"></div>
       <div class="map-text">
         <p class="kicker">39°N · 121°E</p>
-        <h2 class="serif-h">辽东半岛的<br>最南端，大连</h2>
+        <h2 class="serif-h">辽东半岛的<br>最南端</h2>
         <p class="sub">冬天也不结冰的不冻港</p>
       </div>
     </section>
@@ -64,6 +73,7 @@
 
     <!-- s04 · 星海广场 -->
     <section class="scene" id="s04">
+      <div class="floor"><div class="floor-grid"></div></div>
       <div class="cam" id="cam04">
         <div class="sun"></div>
         <svg class="plaza-svg" viewBox="0 0 1920 1080" width="1920" height="1080" aria-label="星海广场">
@@ -74,7 +84,7 @@
         </svg>
         <div class="s04-text">
           <p class="kicker">星海广场</p>
-          <h2 class="serif-h">星之海</h2>
+          <h2 class="serif-h"><svg class="star-mark" viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z" /></svg> 星之海</h2>
           <p class="sub">名字并不夸张的地方</p>
         </div>
       </div>
@@ -103,7 +113,7 @@
       <!-- fixed type over the travelling street -->
       <div class="s06-text">
         <p class="kicker">俄罗斯风情街</p>
-        <h2 class="serif-h">远东的巴黎</h2>
+        <h2 class="serif-h">远东的<span class="neon-word">巴黎</span></h2>
         <p class="sub">俄罗斯人梦想中的港口城市</p>
       </div>
     </section>
@@ -147,9 +157,19 @@
             <line x1="1240" y1="826" x2="1440" y2="826" />
           </g>
         </svg>
+        <div class="glyph" id="g-century"></div>
+        <svg class="clock" viewBox="-60 -60 120 120" width="120" height="120" aria-hidden="true">
+          <circle class="ck-face" cx="0" cy="0" r="44" />
+          <g class="ck-ticks">
+            <path d="M0 -44 L0 -38 M0 44 L0 38 M-44 0 L-38 0 M44 0 L38 0 M31 -31 L27 -27 M-31 31 L-27 27 M31 31 L27 27 M-31 -31 L-27 -27" />
+          </g>
+          <line class="ck-hand hour" x1="0" y1="0" x2="0" y2="-24" />
+          <line class="ck-hand min" x1="0" y1="0" x2="0" y2="-34" />
+          <circle class="ck-pin" cx="0" cy="0" r="3" />
+        </svg>
         <div class="s07-text">
           <p class="kicker">旅顺 · 旧称亚瑟港</p>
-          <h2 class="serif-h">上个世纪的<br>港口</h2>
+          <h2 class="serif-h">港口</h2>
         </div>
       </div>
     </section>
@@ -180,6 +200,11 @@
             <circle class="hinge" cx="0" cy="-10" r="12" />
           </g>
         </svg>
+        <div class="food-labels">
+          <span class="food-label" data-for="abalone">鲍鱼<i></i></span>
+          <span class="food-label" data-for="urchin">海胆<i></i></span>
+          <span class="food-label" data-for="scallop">扇贝<i></i></span>
+        </div>
         <div class="s08-text">
           <p class="kicker">海鲜</p>
           <h2 class="serif-h">晚餐变成<br>大海</h2>
@@ -302,6 +327,7 @@
   </script>
   <script src="js/player.js"></script>
   <script src="js/fxkit.js"></script>
+  <script src="js/glyphs.js"></script>     <!-- glyph outlines: scripts/text_to_paths.mjs -->
   <script src="js/typefx.js"></script>
   <script src="js/art/core.js"></script>
   <script src="js/art/coast.js"></script>

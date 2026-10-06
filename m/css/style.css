@@ -13,7 +13,8 @@
 
   --font: 'Noto Sans SC', 'Pretendard', sans-serif;
   --serif: 'Noto Serif SC', 'Noto Sans SC', serif;
-  --num: 'Pretendard', 'Noto Sans SC', sans-serif;
+  --num: 'Space Grotesk', 'Pretendard', 'Noto Sans SC', sans-serif;
+  --display: 'Space Grotesk', 'Noto Sans SC', sans-serif;   /* Latin display + numerals */
   --mono: 'D2Coding', 'Noto Sans SC', monospace;
 }
 
@@ -140,7 +141,10 @@
 /* ---------------------------------------------------------------- s05 · 有轨电车 */
 
 #s05 .tram-wrap { position: absolute; left: 0; top: 900px; }
-#s05 .s05-text { position: absolute; left: 72px; top: 300px; width: 820px; }
+#s05 .s05-text {
+  position: absolute; left: 72px; top: 382px; width: 820px;
+  display: flex; flex-direction: column-reverse; align-items: flex-start;
+}
 #s05 .tram-wire { stroke: rgba(238, 246, 251, 0.22); stroke-width: 3; }
 #s05 .tram-poles path { fill: none; stroke: rgba(238, 246, 251, 0.18); stroke-width: 6; }
 #s05 .tram-ties line { stroke: rgba(238, 246, 251, 0.10); stroke-width: 5; }
@@ -181,7 +185,10 @@
 /* ---------------------------------------------------------------- s07 · 旅顺 */
 
 #s07 .port-wrap { position: absolute; left: 0; top: 820px; }
-#s07 .s07-text { position: absolute; left: 72px; top: 300px; width: 820px; }
+#s07 .s07-text {
+  position: absolute; left: 72px; top: 380px; width: 820px;
+  display: flex; flex-direction: column-reverse; align-items: flex-start;
+}
 #s07 .lh rect { fill: rgba(238, 246, 251, 0.16); stroke: rgba(238, 246, 251, 0.45); stroke-width: 2; }
 #s07 .lamp { fill: rgba(255, 214, 150, 0.9); }
 #s07 .lamp-gl { fill: rgba(255, 190, 110, 0.22); }
@@ -270,7 +277,7 @@
   letter-spacing: -0.01em; word-break: keep-all; text-shadow: none;
   filter: drop-shadow(0 10px 30px rgba(2, 10, 18, 0.7));
 }
-#s11 .end-sub { margin: 34px 0 0; font-family: var(--mono); font-size: 26px; letter-spacing: 0.3em; color: var(--muted); }
+#s11 .end-sub { font-family: var(--display); margin: 34px 0 0; font-family: var(--mono); font-size: 26px; letter-spacing: 0.3em; color: var(--muted); }
 
 /* ---------------------------------------------------------------- autoplay (no start screen) */
 
@@ -280,3 +287,54 @@ body.vp-nostart .vp-start { display: none !important; }
 
 .ln { display: block; overflow: clip; padding: 0.12em 0; margin: -0.12em 0; }
 .inner { display: inline-block; }
+
+/* ---------------------------------------------------------------- kinetic type: glyph groups, icons, labels */
+
+.glyph { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 12; }
+
+.compass { position: absolute; left: 700px; top: 330px; z-index: 8; opacity: 0.7; }
+.clock { position: absolute; left: 700px; top: 1180px; z-index: 8; opacity: 0.7; }
+.compass .cp-ring { fill: none; stroke: rgba(69, 214, 200, 0.5); stroke-width: 1.6; }
+.compass .cp-ring.thin { stroke: rgba(238, 246, 251, 0.28); }
+.compass .cp-needle { fill: rgba(255, 180, 84, 0.85); }
+.compass .cp-line { stroke: rgba(238, 246, 251, 0.22); stroke-width: 1.2; }
+.clock .ck-face { fill: none; stroke: rgba(238, 246, 251, 0.35); stroke-width: 1.6; }
+.clock .ck-ticks path { stroke: rgba(238, 246, 251, 0.45); stroke-width: 1.6; }
+.clock .ck-hand { stroke: rgba(255, 214, 150, 0.9); stroke-width: 2.4; stroke-linecap: round; }
+.clock .ck-hand.min { stroke: rgba(238, 246, 251, 0.7); stroke-width: 1.8; }
+.clock .ck-pin { fill: rgba(255, 180, 84, 0.95); }
+
+/* the radar sweep that crosses the map (map box sits at y 320) */
+.radar {
+  position: absolute; left: 0; top: 489px; width: 520px; height: 2px; z-index: 7;
+  background: linear-gradient(90deg, rgba(69, 214, 200, 0), rgba(69, 214, 200, 0.85), rgba(238, 246, 251, 0.95));
+  box-shadow: 0 0 18px rgba(69, 214, 200, 0.45);
+}
+
+/* a projected floor grid under the plaza (CSS perspective, no WebGL) */
+.floor { position: absolute; left: -10%; right: -10%; bottom: 0; height: 700px; z-index: 2; perspective: 620px; overflow: hidden; }
+.floor-grid {
+  position: absolute; inset: -40% -20%;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(69, 214, 200, 0.20) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, rgba(69, 214, 200, 0.16) 0 1px, transparent 1px 64px);
+  transform: rotateX(74deg) translateZ(0);
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.9) 45%, rgba(0, 0, 0, 1) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.9) 45%, rgba(0, 0, 0, 1) 100%);
+}
+
+.star-mark { fill: var(--accent); width: 0.6em; height: 0.6em; margin-right: 0.24em; vertical-align: 0.04em; }
+.neon-word { color: #ffe6bd; }
+
+/* the annotated dishes: each label appears with a leader line on its word */
+.food-labels { position: absolute; left: 72px; top: 620px; z-index: 14; }
+.food-label {
+  position: absolute; left: 0; display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: 26px; letter-spacing: 0.12em; color: var(--fg);
+}
+.food-label i { display: block; width: 64px; height: 1px; background: linear-gradient(90deg, rgba(255, 180, 84, 0.15), rgba(255, 180, 84, 0.9)); position: relative; }
+.food-label i::after { content: ''; position: absolute; right: -5px; top: -2.5px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.food-label[data-for="abalone"] { top: 0; }
+.food-label[data-for="urchin"] { top: 104px; }
+.food-label[data-for="scallop"] { top: 208px; }

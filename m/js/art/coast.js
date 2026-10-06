@@ -48,8 +48,6 @@
           <circle class="coast-tip-ring-2" cx="1300" cy="836" r="18" fill="none" stroke="rgba(255,214,150,0.75)" stroke-width="2" />
           <path class="coast-pin" d="M1300 900 C 1284 872 1270 856 1270 838 A 30 30 0 1 1 1330 838 C 1330 856 1316 872 1300 900 Z" />
           <circle cx="1300" cy="838" r="9" fill="rgba(4,18,28,0.75)" />
-          <text class="coast-tip-name" x="1236" y="862" text-anchor="end">大连</text>
-          <text class="coast-tip-sub" x="1236" y="900" text-anchor="end">DALIAN</text>
         </g>`;
 
       const shipInner = el.querySelector('.coast-ship-inner');
