@@ -291,19 +291,13 @@
   <script src="vendor/gsap/ScrambleTextPlugin.min.js"></script>
   <script src="js/cues.js"></script>
   <script>
-    /* This piece has no narration, so its audio track is silence. Muting the engine's own audio element is
-       therefore inaudible and lets the browser start playback without a click (autoplay policy).
-       Delete this block as soon as you give the video a real narration track. */
+    /* This piece has no narration — its track is pure silence. Telling the engine so (audio: '') makes it drive
+       the clock itself: playback starts instantly, nothing waits for the mp3, and the browser's audio autoplay
+       policy is never involved (which is what used to leave the start screen on screen).
+       Delete this block the moment the piece gets a real narration track (script.json "narration": true). */
     (function () {
-      if (!(window.VIDEO_DATA && window.VIDEO_DATA.narration === false)) return;
-      const Native = window.Audio;
-      function MutedAudio() {
-        const el = new Native(...arguments);
-        try { el.muted = true; el.setAttribute('muted', ''); } catch (_) { /* ignore */ }
-        return el;
-      }
-      MutedAudio.prototype = Native.prototype;
-      window.Audio = MutedAudio;
+      const d = window.VIDEO_DATA;
+      if (d && d.narration === false) { d.audio = ''; d.audioDuration = 0; }
     })();
   </script>
   <script src="js/player.js"></script>
