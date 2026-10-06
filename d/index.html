@@ -356,6 +356,22 @@
       const noAuto = /[?&]noautoplay\b/.test(location.search);
       if (noAuto) document.body.classList.remove('vp-nostart');
 
+      /* phones report their real viewport only after the first layout pass: refit the stage so the frame fits */
+      function refit() { try { window.dispatchEvent(new Event('resize')); } catch (_) { /* ignore */ } }
+      refit();
+      requestAnimationFrame(() => requestAnimationFrame(refit));
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
+      addEventListener('load', refit);
+      if (window.visualViewport) visualViewport.addEventListener('resize', refit);
+
+      /* the layout viewport can settle a second late (phones): keep the stage fitting while the page settles */
+      let fitTries = 0;
+      (function ensureFit() {
+        const r = document.getElementById('stage').getBoundingClientRect();
+        if (r.width > innerWidth + 1 || r.height > innerHeight + 1) refit();
+        if (++fitTries < 150) requestAnimationFrame(ensureFit);
+      })();
+
       function giveUp() { document.body.classList.remove('vp-nostart'); }   // show the player's own screen
 
       /* ask the browser first: if it says autoplay is not allowed here, don't even try (and leave the

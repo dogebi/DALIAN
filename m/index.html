@@ -359,6 +359,14 @@
       addEventListener('load', refit);
       if (window.visualViewport) visualViewport.addEventListener('resize', refit);
 
+      /* the layout viewport can settle a second late (phones): keep the stage fitting while the page settles */
+      let fitTries = 0;
+      (function ensureFit() {
+        const r = document.getElementById('stage').getBoundingClientRect();
+        if (r.width > innerWidth + 1 || r.height > innerHeight + 1) refit();
+        if (++fitTries < 150) requestAnimationFrame(ensureFit);
+      })();
+
       function giveUp() { document.body.classList.remove('vp-nostart'); }
 
       function policyAllows() {
