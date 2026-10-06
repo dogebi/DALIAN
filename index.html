@@ -315,33 +315,70 @@
   <script src="js/art/street.js"></script>
   <script src="js/scenes.js"></script>
   <script>
-    /* Autoplay on load. Published over http(s) the page starts by itself — no click; opened as a local file it
-       waits for you, which is the screen-recording workflow. Force either way with ?autoplay / ?noautoplay.
-       The start screen disappears only once the timeline is really running; if a browser refuses, it stays. */
+    /* The piece plays itself, in the window, the moment it has rendered — no buttons, no start screen.
+       The player's start screen is hidden while that works; it comes back by itself (with its buttons) only if
+       the browser refuses to start. `?noautoplay` holds the first frame: press Space (window) or Enter (fullscreen)
+       when your recorder is rolling. */
     (function () {
-      const q = location.search;
-      const served = /^https?:$/.test(location.protocol);
-      const wantAuto = served ? !/[?&]noautoplay\b/.test(q) : /[?&]autoplay\b/.test(q);
-      if (!wantAuto) return;
+      /* the player's own start screen speaks Korean or English; this piece is Chinese, so localize it.
+         (It normally never shows — only if autoplay is refused, or with ?noautoplay.) */
+      function localize() {
+        const title = document.querySelector('.vp-start-title');
+        if (title) title.textContent = '载入中…';
+        const btns = document.querySelectorAll('.vp-start-buttons .vp-btn');
+        if (btns[0]) btns[0].textContent = '▶ 全屏播放';
+        if (btns[1]) btns[1].textContent = '窗口内播放';
+        const hint = document.querySelector('.vp-start-hint');
+        if (hint) hint.textContent = 'Space 播放/暂停 · ←/→ 0.5 秒（Shift 5 秒）· Shift+>/< 变速 · F 全屏 · C 字幕 · D 调试 · R 重播';
+      }
+
+      document.body.classList.add('vp-nostart');
+      const noAuto = /[?&]noautoplay\b/.test(location.search);
+      if (noAuto) document.body.classList.remove('vp-nostart');
+
+      function giveUp() { document.body.classList.remove('vp-nostart'); }   // show the player's own screen
+
+      /* ask the browser first: if it says autoplay is not allowed here, don't even try (and leave the
+         player's own screen up so a click can still start the piece). */
+      function policyAllows() {
+        try {
+          const p = navigator.getAutoplayPolicy && navigator.getAutoplayPolicy('mediaelement');
+          return !p || p !== 'disallowed';
+        } catch (_) { return true; }
+      }
 
       function begin() {
         const v = window.__video;
-        if (!v) return;
-        let tries = 0;
-        function watch() {
-          if (document.body.classList.contains('vp-playing')) {
-            const s = document.querySelector('.vp-start');
-            if (s) s.classList.add('vp-hidden');
-            return;
+        if (!v || !policyAllows()) return giveUp();
+
+        /* stay out of the way if anything else drives the playhead first: a verification tool, a recorder
+           script, or a viewer scrubbing. Only start by ourselves if nobody has touched it. */
+        let armed = true;
+        const nativeSeek = v.seek;
+        v.seek = function (x) { armed = false; return nativeSeek.apply(v, arguments); };
+
+        let wait = 0;
+        function arm() {
+          if (!armed) return giveUp();
+          if (++wait < 72) return requestAnimationFrame(arm);      // ~1.2 s of stillness, then start
+          let tries = 0;
+          function watch() {
+            if (document.body.classList.contains('vp-playing')) return;   // running: nothing to show
+            if (++tries < 100) requestAnimationFrame(watch);              // ~1.5 s grace, then fall back
+            else giveUp();
           }
-          if (++tries < 240) requestAnimationFrame(watch);
+          try {
+            Promise.resolve(v.play()).then(() => requestAnimationFrame(watch)).catch(giveUp);
+          } catch (_) { giveUp(); }
         }
-        try { Promise.resolve(v.play()).then(() => requestAnimationFrame(watch)).catch(() => {}); } catch (_) { /* ignore */ }
+        requestAnimationFrame(arm);
       }
 
-      if (document.body.classList.contains('vp-ready')) begin();
+      function ready() { localize(); if (!noAuto) begin(); }
+
+      if (document.body.classList.contains('vp-ready')) ready();
       else new MutationObserver((_, o) => {
-        if (document.body.classList.contains('vp-ready')) { o.disconnect(); begin(); }
+        if (document.body.classList.contains('vp-ready')) { o.disconnect(); ready(); }
       }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     })();
   </script>

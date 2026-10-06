@@ -256,6 +256,12 @@
   margin: 40px 0 0; font-family: var(--mono); font-size: 30px; letter-spacing: 0.34em; color: var(--muted);
 }
 
+/* ---------------------------------------------------------------- autoplay (no start screen)
+
+   The piece plays itself in the window as soon as it has rendered; the player's start screen stays hidden
+   while that works and comes back on its own only when a browser refuses to start (see index.html). */
+body.vp-nostart .vp-start { display: none !important; }
+
 /* ---------------------------------------------------------------- headline masks (each line rises out of its own box) */
 
 .ln { display: block; overflow: clip; padding: 0.12em 0; margin: -0.12em 0; }
