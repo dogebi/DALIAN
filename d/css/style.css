@@ -1,0 +1,309 @@
+/* style.css — 대련, 참으로 멋진 여행
+   Art direction: night-sea navy, one lantern amber, one sea teal. The horizon line is the motif:
+   it appears in every scene as a different thing (sea line, coastline, rule, rail, cornice, plate rim, season cut, underline).
+   All sizes are stage pixels (1920×1080). */
+
+:root {
+  --bg: #071a26;
+  --surface: #0d2534;
+  --ink: #04121c;
+  --fg: #eef6fb;
+  --muted: #7e9aab;
+  --accent: #ffb454;      /* lantern amber */
+  --accent-2: #45d6c8;    /* sea teal */
+
+  /* SIL OFL 1.1 fonts only — never a system font in these stacks.
+     Chinese: Noto Sans SC / Noto Serif SC (Google Fonts ofl/, installed by add_font.mjs).
+     Latin + numerals: Pretendard (tabular figures); mono labels: D2Coding. */
+  --font: 'Noto Sans SC', 'Pretendard', sans-serif;
+  --serif: 'Noto Serif SC', 'Noto Sans SC', serif;
+  --num: 'Pretendard', 'Noto Sans SC', sans-serif;
+  --mono: 'D2Coding', 'Noto Sans SC', monospace;
+}
+
+#stage {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+}
+
+/* aspect 16:9 · stage 1920×1080 */
+:root { --safe: 96px; --safe-top: 96px; --safe-bottom: 96px; --safe-right: 96px; }
+#stage { --caption-bottom: 20px; --caption-max: 1200px; --caption-font: 'Noto Sans SC', 'Pretendard', sans-serif; }
+
+/* ---------------------------------------------------------------- persistent layers */
+
+.bgsea {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(120% 70% at 74% 8%, rgba(69, 214, 200, 0.10), rgba(69, 214, 200, 0) 60%),
+    linear-gradient(180deg, #04121c 0%, #071a26 46%, #0a2431 100%);
+}
+
+.tint { position: absolute; inset: 0; z-index: 1; background: var(--tint, transparent); opacity: 0.5; }
+
+.field { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 33; pointer-events: none; }
+
+.hud {
+  position: absolute; left: 96px; bottom: 96px; z-index: 30;
+  display: flex; gap: 26px;
+  font-family: var(--mono); font-size: 24px; letter-spacing: 0.22em;
+  color: rgba(238, 246, 251, 0.40);
+}
+
+.grain { position: absolute; inset: 0; z-index: 50; pointer-events: none; mix-blend-mode: overlay; }
+
+/* the signature cut: the horizon line becomes a panel that carries the scene change */
+.sweep {
+  position: absolute; inset: 0; z-index: 40;
+  background: var(--bg); transform: scaleY(0); transform-origin: 50% 100%;
+}
+.sweep::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px;
+  background: linear-gradient(90deg, rgba(69, 214, 200, 0) 4%, var(--accent-2) 50%, rgba(69, 214, 200, 0) 96%);
+}
+
+/* ---------------------------------------------------------------- scene scaffolding */
+
+.scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+.cam { position: absolute; inset: 0; }
+
+.kicker {
+  margin: 0 0 18px;
+  font-family: var(--mono); font-size: 28px; letter-spacing: 0.26em;
+  color: var(--accent-2); text-transform: uppercase;
+}
+.serif-h {
+  margin: 0; font-family: var(--serif); font-weight: 700; font-size: 92px;
+  line-height: 1.24; letter-spacing: -0.01em; word-break: keep-all; text-wrap: balance;
+}
+.sub { margin: 22px 0 0; font-size: 34px; font-weight: 500; color: var(--muted); letter-spacing: -0.01em; }
+.hr { stroke: rgba(238, 246, 251, 0.30); stroke-width: 2; }
+
+/* ---------------------------------------------------------------- s01 ─ 훅 */
+
+#s01 .cam { transform-origin: 50% 62%; }
+#s01 .hook {
+  position: absolute; left: 160px; top: 296px; width: 1320px; margin: 0;
+  font-size: 118px; font-weight: 800; line-height: 1.18; letter-spacing: -0.03em;
+  word-break: keep-all;
+  text-shadow: none;
+  filter: drop-shadow(0 10px 28px rgba(2, 10, 18, 0.65));
+}
+#s01 .hook em { font-family: var(--serif); font-style: normal; font-weight: 700; color: var(--accent); }
+#s01 .horizon {
+  position: absolute; left: 0; top: 672px; width: 1920px; height: 3px;
+  background: linear-gradient(90deg, rgba(69, 214, 200, 0) 0%, rgba(69, 214, 200, 0.85) 24%, rgba(238, 246, 251, 0.9) 50%, rgba(69, 214, 200, 0.85) 76%, rgba(69, 214, 200, 0) 100%);
+  transform-origin: 0% 50%;
+}
+#s01 .hook-sub {
+  position: absolute; left: 164px; top: 730px; margin: 0;
+  font-family: var(--mono); font-size: 30px; letter-spacing: 0.2em; color: var(--muted);
+}
+#s01 .moon {
+  position: absolute; right: 176px; top: 128px; width: 190px; height: 190px; border-radius: 50%;
+  background: radial-gradient(circle at 42% 42%, rgba(238, 246, 251, 0.95) 0%, rgba(238, 246, 251, 0.55) 26%, rgba(238, 246, 251, 0.10) 46%, rgba(238, 246, 251, 0) 66%);
+}
+
+/* ---------------------------------------------------------------- s02 ─ 지도와 부동항 */
+
+#s02 .map { position: absolute; inset: 0; }
+#s02 .map-text { position: absolute; left: 140px; top: 250px; width: 700px; }
+#s02 .coast-land { fill: rgba(238, 246, 251, 0.07); stroke: rgba(69, 214, 200, 0.55); stroke-width: 2.5; }
+#s02 .coast-grid line { stroke: rgba(126, 154, 171, 0.16); stroke-width: 1; }
+#s02 .coast-grid text { fill: rgba(126, 154, 171, 0.55); font-family: var(--mono); font-size: 22px; letter-spacing: 0.2em; }
+#s02 .coast-island { fill: rgba(69, 214, 200, 0.30); stroke: rgba(69, 214, 200, 0.6); stroke-width: 1.5; }
+#s02 .coast-label { fill: rgba(126, 154, 171, 0.8); font-family: var(--mono); font-size: 26px; letter-spacing: 0.3em; }
+#s02 .coast-tip-name { fill: var(--fg); font-family: var(--serif); font-size: 54px; font-weight: 700; }
+#s02 .coast-tip-sub { fill: var(--accent); font-family: var(--mono); font-size: 24px; letter-spacing: 0.3em; }
+#s02 .coast-pin { fill: var(--accent); }
+#s02 .coast-port { fill: rgba(238, 246, 251, 0.5); }
+#s02 .coast-ship { fill: var(--fg); }
+#s02 .coast-wake { stroke: rgba(238, 246, 251, 0.45); stroke-width: 3; fill: none; }
+
+/* ---------------------------------------------------------------- s03 ─ 규모 */
+
+#s03 .num-block { position: absolute; left: 140px; width: 820px; }
+#blk-pop { top: 252px; }
+#blk-coast { top: 592px; }
+#s03 .num { margin: 0; display: flex; align-items: baseline; gap: 16px; }
+#s03 .num .v {
+  font-family: var(--num);
+  font-size: 150px; font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+#s03 .num .unit { font-family: var(--serif); font-size: 54px; color: var(--accent); }
+#s03 .num-label { margin: 16px 0 0; font-family: var(--mono); font-size: 28px; letter-spacing: 0.1em; color: var(--muted); }
+#s03 .coastline { position: absolute; left: 1010px; top: 200px; width: 820px; height: 700px; }
+#s03 .cl-line { fill: none; stroke: rgba(69, 214, 200, 0.85); stroke-width: 4; stroke-linecap: round; }
+#s03 .isle { fill: rgba(255, 180, 84, 0.9); }
+
+/* ---------------------------------------------------------------- s04 ─ 성해광장 */
+
+#s04 .plaza-svg { position: absolute; inset: 0; }
+#s04 .skyline { fill: rgba(4, 18, 28, 0.85); }
+#s04 .plaza { fill: rgba(255, 180, 84, 0.06); stroke: rgba(69, 214, 200, 0.7); stroke-width: 4; }
+#s04 .plaza-star { fill: var(--accent); }
+#s04 .s04-text { position: absolute; left: 140px; top: 210px; width: 700px; }
+#s04 .sun {
+  position: absolute; left: 1300px; top: 140px; width: 190px; height: 190px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 214, 150, 0.98) 0%, rgba(255, 180, 84, 0.55) 34%, rgba(255, 140, 60, 0.16) 58%, rgba(255, 140, 60, 0) 74%);
+}
+
+/* ---------------------------------------------------------------- s05 ─ 노면전차 */
+
+#s05 .tram-wrap { position: absolute; inset: 0; }
+#s05 .s05-text { position: absolute; left: 140px; top: 140px; width: 620px; }
+
+/* ---------------------------------------------------------------- s06 ─ 러시아 거리 */
+
+#s06 .street-wrap { position: absolute; left: 0; top: 0; }
+#s06 .s06-text { position: absolute; left: 140px; top: 150px; width: 760px; }
+
+/* ---------------------------------------------------------------- s07 ─ 뤼순 */
+
+#s07 .port-wrap { position: absolute; inset: 0; }
+#s07 .s07-text { position: absolute; left: 140px; top: 208px; width: 640px; }
+#s07 .lh rect { fill: rgba(238, 246, 251, 0.16); stroke: rgba(238, 246, 251, 0.45); stroke-width: 2; }
+#s07 .lamp { fill: rgba(255, 214, 150, 0.9); }
+#s07 .lamp-gl { fill: rgba(255, 190, 110, 0.22); }
+#s07 .beam { fill: url(#beamGrad); }
+#s07 .pier rect { fill: rgba(238, 246, 251, 0.13); }
+#s07 .cranes path { fill: none; stroke: rgba(238, 246, 251, 0.28); stroke-width: 3; }
+#s07 .reflect line { stroke: rgba(255, 190, 110, 0.18); stroke-width: 3; }
+
+/* ---------------------------------------------------------------- s08 ─ 식탁 */
+
+#s08 .table-top {
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 90% at 66% 46%, #3b2412 0%, #241407 46%, #120a04 100%);
+}
+#s08 .dish-wrap { position: absolute; inset: 0; }
+#s08 .plate-rim { fill: rgba(238, 246, 251, 0.10); }
+#s08 .plate { fill: rgba(238, 246, 251, 0.16); stroke: rgba(255, 180, 84, 0.55); stroke-width: 3; }
+#s08 .abalone .body { fill: #b98a52; }
+#s08 .abalone .top { fill: #d8a76a; }
+#s08 .abalone .hole { fill: rgba(20, 12, 6, 0.75); }
+#s08 .urchin .body { fill: #6b3f4e; }
+#s08 .urchin .core { fill: #40202c; }
+#s08 .urchin .spikes { stroke: #8a5566; stroke-width: 5; stroke-linecap: round; fill: none; }
+#s08 .scallop .fan { fill: #d9c08c; stroke: rgba(120, 96, 60, 0.5); stroke-width: 2; }
+#s08 .scallop .ridges { stroke: rgba(120, 96, 60, 0.45); stroke-width: 3; fill: none; }
+#s08 .scallop .hinge { fill: #b99a63; }
+#s08 .s08-text { position: absolute; left: 140px; top: 250px; width: 640px; }
+
+/* ---------------------------------------------------------------- s09 ─ 금석탄 (여름/겨울) */
+
+#s09 .season { position: absolute; inset: 0; }
+#s09 .sky { position: absolute; left: 0; top: 0; width: 1920px; height: 560px; }
+#s09 .water { position: absolute; left: 0; top: 560px; width: 1920px; height: 300px; }
+#s09 .shore { position: absolute; left: 0; top: 860px; width: 1920px; height: 220px; }
+#s09 .sky.warm { background: linear-gradient(180deg, #2e4a63 0%, #8ea2a5 42%, #e9c48e 82%, #f6dcae 100%); }
+#s09 .water.teal { background: linear-gradient(180deg, #1a8f9c 0%, #146d7d 58%, #0e5462 100%); }
+#s09 .shore.gold { background: linear-gradient(180deg, #e0b877 0%, #cfa260 60%, #b58748 100%); }
+#s09 .sky.cold { background: linear-gradient(180deg, #46596a 0%, #7d8f9c 48%, #b9c6ce 100%); }
+#s09 .water.silver { background: linear-gradient(180deg, #9db1bd 0%, #7e929f 58%, #64798a 100%); }
+#s09 .shore.pale { background: linear-gradient(180deg, #cbd5da 0%, #b3c0c7 62%, #98a7b0 100%); }
+#s09 .fig-wrap { position: absolute; inset: 0; }
+#s09 .pebble { fill: rgba(120, 88, 44, 0.45); }
+#s09 .crowd path, #s09 .crowd circle { fill: rgba(9, 22, 30, 0.55); }
+#s09 .crowd .umbrella { fill: rgba(255, 122, 69, 0.78); }
+#s09 .crowd .pole { stroke: rgba(9, 22, 30, 0.6); stroke-width: 4; }
+#s09 .walker circle, #s09 .walker path { fill: rgba(22, 34, 44, 0.7); }
+#s09 .walker .shadow { fill: rgba(30, 44, 54, 0.28); }
+#s09 .hline {
+  position: absolute; left: 0; top: 557px; width: 1920px; height: 4px;
+  background: linear-gradient(90deg, rgba(238, 246, 251, 0) 0%, rgba(238, 246, 251, 0.85) 30%, rgba(238, 246, 251, 0.85) 70%, rgba(238, 246, 251, 0) 100%);
+}
+#s09 .s09-text { position: absolute; left: 140px; top: 176px; width: 980px; }
+#s09 .t1, #s09 .t2 { position: absolute; left: 0; top: 0; width: 980px; }
+#s09 .t2 .kicker { color: var(--fg); }
+
+/* ---------------------------------------------------------------- s10 ─ 거리 */
+
+#s10 .chart-wrap { position: absolute; inset: 0; }
+#s10 .dotgrid circle { fill: rgba(126, 154, 171, 0.22); }
+#s10 .arc { fill: none; stroke: rgba(69, 214, 200, 0.85); stroke-width: 3; stroke-dasharray: 14 16; }
+#s10 .pt { fill: var(--accent); }
+#s10 .pt2 { fill: var(--accent-2); }
+#s10 .plane path { fill: var(--fg); }
+#s10 .city-label { position: absolute; margin: 0; font-family: var(--mono); font-size: 30px; letter-spacing: 0.16em; color: var(--muted); }
+#s10 .lbl-seoul { left: 186px; top: 802px; }
+#s10 .lbl-dalian { left: 1560px; top: 372px; color: var(--accent); }
+#s10 .s10-text { position: absolute; left: 260px; top: 104px; width: 1400px; text-align: center; }
+#s10 .hero {
+  font-family: var(--num);
+  font-size: 150px; font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+  display: inline-block; text-shadow: none; filter: drop-shadow(0 8px 26px rgba(2, 10, 18, 0.6));
+}
+#s10 .s10-text .sub { font-size: 34px; }
+
+/* ---------------------------------------------------------------- s11 ─ 엔드카드 */
+
+#s11 .cam { transform-origin: 50% 66%; }
+#s11 .horizon {
+  position: absolute; left: 480px; top: 660px; width: 960px; height: 3px;
+  background: linear-gradient(90deg, rgba(255, 180, 84, 0) 0%, var(--accent) 30%, rgba(238, 246, 251, 0.9) 50%, var(--accent) 70%, rgba(255, 180, 84, 0) 100%);
+  transform-origin: 0% 50%;
+}
+#s11 .end-text { position: absolute; left: 160px; top: 400px; width: 1600px; text-align: center; }
+#s11 .end-title {
+  margin: 0; font-family: var(--serif); font-weight: 700; font-size: 104px; line-height: 1.2;
+  letter-spacing: -0.01em; word-break: keep-all; text-shadow: none;
+  filter: drop-shadow(0 10px 30px rgba(2, 10, 18, 0.7));
+}
+#s11 .end-sub {
+  margin: 40px 0 0; font-family: var(--mono); font-size: 30px; letter-spacing: 0.34em; color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- autoplay (no start screen)
+
+   The piece plays itself in the window as soon as it has rendered; the player's start screen stays hidden
+   while that works and comes back on its own only when a browser refuses to start (see index.html). */
+body.vp-nostart .vp-start { display: none !important; }
+
+/* ---------------------------------------------------------------- headline masks (each line rises out of its own box) */
+
+.ln { display: block; overflow: clip; padding: 0.12em 0; margin: -0.12em 0; }
+.inner { display: inline-block; }
+
+/* ---------------------------------------------------------------- s02 · 지도 (port strokes) */
+
+#s02 .coast-port path { fill: none; stroke: rgba(238, 246, 251, 0.5); stroke-width: 5; stroke-linecap: round; }
+
+/* ---------------------------------------------------------------- s05 · 노면전차 (art/tram.js) */
+
+#s05 .tram-wire { stroke: rgba(238, 246, 251, 0.22); stroke-width: 3; }
+#s05 .tram-poles path { fill: none; stroke: rgba(238, 246, 251, 0.18); stroke-width: 6; }
+#s05 .tram-ties line { stroke: rgba(238, 246, 251, 0.10); stroke-width: 5; }
+#s05 .tram-rails .rail { stroke: rgba(238, 246, 251, 0.5); stroke-width: 6; stroke-linecap: round; }
+#s05 .tram-shadow { fill: rgba(2, 10, 18, 0.55); }
+#s05 .tram-roof { fill: #dbe4e4; }
+#s05 .tram-shell { fill: #efe4cd; }
+#s05 .tram-band { fill: #1e6b63; }
+#s05 .tram-skirt { fill: #143029; }
+#s05 .tram-wins .win { fill: #ffca7a; }
+#s05 .tram-door { fill: #e4d8c0; }
+#s05 .tram-door-line { stroke: rgba(20, 30, 40, 0.32); stroke-width: 3; }
+#s05 .tram-lights .lamp { fill: #ffe9c4; }
+#s05 .tram-lights .glow { fill: rgba(255, 200, 120, 0.2); }
+#s05 .tram-lights .small { fill: #ffd79a; }
+#s05 .tram-bogies rect { fill: #143029; }
+#s05 .tram-bogies .wheel { fill: #2b3a3d; stroke: rgba(238, 246, 251, 0.3); stroke-width: 3; }
+#s05 .tram-panto line, #s05 .tram-panto path { fill: none; stroke: rgba(238, 246, 251, 0.65); stroke-width: 5; stroke-linecap: round; }
+#s05 .tram-panto .shoe { stroke-width: 8; }
+#s05 .tram-plate { fill: rgba(30, 107, 99, 0.9); }
+
+/* ---------------------------------------------------------------- s06 · 러시아 거리 (art/street.js) */
+
+#s06 .facade .body { fill: rgba(238, 246, 251, 0.075); }
+#s06 .facade .roof { fill: rgba(238, 246, 251, 0.13); }
+#s06 .facade .string { fill: rgba(69, 214, 200, 0.40); }
+#s06 .facade .pilaster { fill: rgba(238, 246, 251, 0.05); }
+#s06 .win { fill: #ffca7a; }
+#s06 .pavement { fill: rgba(4, 18, 28, 0.85); }
+#s06 .pavement-line { stroke: rgba(255, 180, 84, 0.35); stroke-width: 3; }
+#s06 .lamp-post path { fill: none; stroke: rgba(238, 246, 251, 0.26); stroke-width: 5; }
+#s06 .lamp-gl { fill: rgba(255, 190, 110, 0.3); }
+#s06 .lamp-head { fill: #ffd79a; }
+#s06 .curtain { fill: rgba(238, 246, 251, 0.22); }
