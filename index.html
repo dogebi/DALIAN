@@ -290,6 +290,22 @@
   <script src="vendor/gsap/TextPlugin.min.js"></script>
   <script src="vendor/gsap/ScrambleTextPlugin.min.js"></script>
   <script src="js/cues.js"></script>
+  <script>
+    /* This piece has no narration, so its audio track is silence. Muting the engine's own audio element is
+       therefore inaudible and lets the browser start playback without a click (autoplay policy).
+       Delete this block as soon as you give the video a real narration track. */
+    (function () {
+      if (!(window.VIDEO_DATA && window.VIDEO_DATA.narration === false)) return;
+      const Native = window.Audio;
+      function MutedAudio() {
+        const el = new Native(...arguments);
+        try { el.muted = true; el.setAttribute('muted', ''); } catch (_) { /* ignore */ }
+        return el;
+      }
+      MutedAudio.prototype = Native.prototype;
+      window.Audio = MutedAudio;
+    })();
+  </script>
   <script src="js/player.js"></script>
   <script src="js/fxkit.js"></script>
   <script src="js/typefx.js"></script>
@@ -298,5 +314,36 @@
   <script src="js/art/tram.js"></script>
   <script src="js/art/street.js"></script>
   <script src="js/scenes.js"></script>
+  <script>
+    /* Autoplay on load. Published over http(s) the page starts by itself — no click; opened as a local file it
+       waits for you, which is the screen-recording workflow. Force either way with ?autoplay / ?noautoplay.
+       The start screen disappears only once the timeline is really running; if a browser refuses, it stays. */
+    (function () {
+      const q = location.search;
+      const served = /^https?:$/.test(location.protocol);
+      const wantAuto = served ? !/[?&]noautoplay\b/.test(q) : /[?&]autoplay\b/.test(q);
+      if (!wantAuto) return;
+
+      function begin() {
+        const v = window.__video;
+        if (!v) return;
+        let tries = 0;
+        function watch() {
+          if (document.body.classList.contains('vp-playing')) {
+            const s = document.querySelector('.vp-start');
+            if (s) s.classList.add('vp-hidden');
+            return;
+          }
+          if (++tries < 240) requestAnimationFrame(watch);
+        }
+        try { Promise.resolve(v.play()).then(() => requestAnimationFrame(watch)).catch(() => {}); } catch (_) { /* ignore */ }
+      }
+
+      if (document.body.classList.contains('vp-ready')) begin();
+      else new MutationObserver((_, o) => {
+        if (document.body.classList.contains('vp-ready')) { o.disconnect(); begin(); }
+      }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    })();
+  </script>
 </body>
 </html>
