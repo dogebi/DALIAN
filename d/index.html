@@ -364,12 +364,14 @@
       addEventListener('load', refit);
       if (window.visualViewport) visualViewport.addEventListener('resize', refit);
 
-      /* the layout viewport can settle a second late (phones): keep the stage fitting while the page settles */
-      let fitTries = 0;
+      /* the layout viewport can settle late (phones) — long after load: keep the stage fitting, cheaply */
+      let fitTick = 0;
       (function ensureFit() {
-        const r = document.getElementById('stage').getBoundingClientRect();
-        if (r.width > innerWidth + 1 || r.height > innerHeight + 1) refit();
-        if (++fitTries < 150) requestAnimationFrame(ensureFit);
+        if (fitTick++ % 20 === 0) {
+          const r = document.getElementById('stage').getBoundingClientRect();
+          if (r.width > innerWidth + 1 || r.height > innerHeight + 1) refit();
+        }
+        requestAnimationFrame(ensureFit);
       })();
 
       function giveUp() { document.body.classList.remove('vp-nostart'); }   // show the player's own screen
